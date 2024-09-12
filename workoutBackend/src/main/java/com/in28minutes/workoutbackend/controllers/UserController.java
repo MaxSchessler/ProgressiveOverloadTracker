@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
-import java.util.OptionalInt;
 
 @RestController("/users")
 public class UserController {
@@ -29,9 +28,9 @@ public class UserController {
 
     @GetMapping("/findbyemail/")
     public ResponseEntity<User> getUserByName(@RequestParam String email) {
-        User user = userRepository.findByEmail(email);
-        if (user != null) {
-            return ResponseEntity.ok(user);
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isPresent()) {
+            return ResponseEntity.ok(user.get());
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -47,7 +46,8 @@ public class UserController {
     public ResponseEntity<User> getEmptyUser() {
         User user = new User();
         user.setId(0);
-        user.setName("maxschessler");
+        user.setFirstname("Max");
+        user.setLastname("Schessler");
         user.setEmail("email@gmail.com");
         user.setPassword("password");
         return ResponseEntity.ok().body(user);
